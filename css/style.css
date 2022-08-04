@@ -1,0 +1,160 @@
+header {
+    position: relative;
+    display: flex;
+    height: 5rem;
+    padding: 0 1.5rem;
+    background: #333333;
+}
+
+.logo {
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 5rem;
+}
+
+.nav-bar {
+    flex: 1;
+    height: 100%;
+}
+
+.nav-bar .nav-bar-body {
+    display: flex;
+    margin-left: 1.5rem;
+}
+
+.nav-bar .nav-bar-item {
+    width: 8rem;
+    text-align: center;
+    margin-right: 1.5rem;
+}
+
+.nav-bar .nav-bar-item a {
+    font-size: 1.2rem;
+    color: white;
+    line-height: 5rem;
+}
+
+.menu-btn {
+    display: none;
+    height: 2.5rem;
+    padding: 0 0.4rem;
+    margin-top: 1.3rem;
+}
+
+.banner {
+    position: relative;
+    height: 40vh;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, .5);
+    overflow: hidden;
+}
+
+.backgroud {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    filter: blur(4px);
+    object-fit: cover;
+}
+
+.user {
+    display: flex;
+    flex-flow: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    /* width: 10rem; */
+}
+
+.user-avatar {
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 0.3rem solid #ffffff;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .5);
+    user-select: none;
+    cursor: pointer
+}
+
+.user-name {
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 0.5rem;
+    letter-spacing: 0.4rem;
+}
+
+.content {
+    width: 120rem;
+    margin: 50px auto;
+}
+
+.content .inner {
+    display: flex;
+    width: 122rem;
+    margin-left: -1rem;
+}
+
+.list-card {
+    width: 25%;
+    height: 16rem;
+    padding: 1rem;
+    /* background: whitesmoke; */
+    border: 0.1rem solid transparent;
+    transition: all .3s
+}
+
+.list-card:hover {
+    border-color: #ddd;
+}
+
+.list-card-body {
+    position: relative;
+    height: 100%;
+    background-color: whitesmoke;
+}
+
+.list-card-body::before {
+    position: absolute;
+    content: " ";
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient( -50deg, #F7A37B, #f78a7b 1em, #FFDEA8 1em, #FFDEA8 2em, #D0E4B0 2em, #D0E4B0 3em, #7CC5D0 3em, #7CC5D0 4em, #00A2E1 4em, #00A2E1 5em, #0085C8 5em, #0085C8 6em);
+}
+
+.list-card-body::after {
+    position: absolute;
+    content: " ";
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    mix-blend-mode: multiply;
+    transition: all .3s ease-in-out;
+    background-image: repeating-linear-gradient( 50deg, #F7A37B, #f78a7b 1em, #FFDEA8 1em, #FFDEA8 2em, #D0E4B0 2em, #D0E4B0 3em, #7CC5D0 3em, #7CC5D0 4em, #00A2E1 4em, #00A2E1 5em, #0085C8 5em, #0085C8 6em);
+}
+
+.list-card:nth-child(2) .list-card-body::after {
+    mix-blend-mode: color-burn;
+}
+
+.list-card:nth-child(3) .list-card-body::after {
+    mix-blend-mode: difference;
+}
+
+.list-card:nth-child(4) .list-card-body::after {
+    mix-blend-mode: luminosity;
+}
+
+.list-card:nth-child(4) .list-card-body::after {
+    mix-blend-mode: exclusion;
+}
+
+.list-card-body:hover::after {
+    opacity: 1;
+}

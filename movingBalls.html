@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 5px;
+        }
+
+        .my-canvas {
+            display: block;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const canvasElement = document.createElement('canvas');
+        const ctx = canvasElement.getContext('2d');
+        canvasElement.width = document.documentElement.clientWidth - 2 - 30;
+        canvasElement.height = document.documentElement.clientHeight - 2 - 30;
+        canvasElement.classList = ['my-canvas'];
+        document.body.append(canvasElement);
+
+        class Ball {
+            constructor(context, x, y, radius, color, speed) {
+                this.context = context;
+                this.x = x < radius ? radius * 2 : x;
+                this.y = y < radius ? radius * 2 : y;
+                this.radius = radius;
+                this.speed = speed || 10;
+                this.dx = this.getRandomNum(this.speed);
+                this.dy = this.getRandomNum(this.speed);
+                this.color = color || this.getRandomColor();
+            }
+
+            getRandomNum(limit) {
+                const half = Math.round(limit / 2);
+                let value = parseInt(Math.random() * limit) - half;
+
+                if (value === 0) {
+                    value = this.getRandomNum(limit);
+                }
+
+                return value;
+            }
+
+            getRandomColor() {
+                let color = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+
+                if (color.length < 6) {
+                    color = this.getRandomColor();
+                }
+
+                return `#${color}`;
+            }
+
+            update() {
+                const { width, height } = ctx.canvas;
+                this.x -= this.dx;
+                this.y -= this.dy;
+
+                if (this.x < this.radius || this.x > (width - this.radius)) {
+                    this.dx = -this.dx;
+                }
+
+                if (this.y < this.radius || this.y > (height - this.radius)) {
+                    this.dy = -this.dy;
+                }
+            }
+
+            render(index, callback) {
+                const { context, x, y, radius, color } = this;
+                context.beginPath();
+                context.globalAlpha = 1;
+                context.arc(x, y, radius, 0, 2 * Math.PI, false);
+                context.fillStyle = color;
+                context.closePath();
+                context.fill();
+                // context.fillStyle = '#000000';
+                // context.fillText(`[${index}]-(${x}, ${y})`, (x - radius * 1.7), y + radius * 1.5);
+
+                callback && callback(this);
+            }
+        }
+
+        const balls = [];
+        for (let i = 0; i < 150; i++) {
+            setTimeout(() => {
+                balls.push(new Ball(ctx, Math.round(Math.random() * (ctx.canvas.width - 20)), Math.round(Math.random() * (ctx.canvas.height - 20)), 5, null, 5))
+            }, (i + 1) * 100)
+        }
+        console.log(balls)
+        setInterval(() => {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            for (let i = 0; i < balls.length; i++) {
+                const ball = balls[i];
+                ball.update();
+                ball.render(i + 1, (item) => {
+                    try {
+                        for (let j = i + 1; j < balls.length; j++) {
+                            if (balls[j]) {
+                                if (Math.abs(balls[j].x - item.x) < 150 && Math.abs(balls[j].y - item.y) < 150) {
+                                    item.context.beginPath();
+                                    item.context.moveTo(item.x, item.y);
+                                    item.context.lineTo(balls[j].x, balls[j].y);
+                                    item.context.strokeStyle = '#000000';
+                                    item.context.globalAlpha = 10 / Math.sqrt(Math.pow(balls[j].x - item.x, 2) + Math.pow(balls[j].y - item.y, 2));
+                                    item.context.closePath();
+                                    item.context.stroke();
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
+                });
+            }
+        }, 10)
+    </script>
+</body>
+
+</html>

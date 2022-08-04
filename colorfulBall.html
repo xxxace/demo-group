@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #color {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="color" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('color');
+        const ctx = canvas.getContext('2d');
+        const balls = [];
+
+        canvas.addEventListener('click', (e) => {
+            const { clientX, clientY } = e;
+            for (let i = 0; i < 60; i++) {
+                balls.push(new Ball(clientX, clientY, Math.floor(Math.random() * 40)));
+            }
+        });
+
+        function Ball(x, y, radius) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = '#000000';
+            this.dx = parseInt(Math.random() * 10) - 5;
+            this.dy = parseInt(Math.random() * 10) - 5;
+            this.getRandomColor = function () {
+                let value = Math.floor(Math.random() * 0xffffff).toString(16);
+                if (value.length < 6) {
+                    value = this.getRandomColor();
+                }
+                return '#' + value;
+            }
+        }
+        Ball.prototype.update = function () {
+            this.x += this.dx * 3;
+            this.y += this.dy * 3;
+            this.radius -= 1.2;
+            if (this.radius < 0) {
+                this.radius = 0;
+                return false;
+            }
+
+            return true;
+        }
+
+        Ball.prototype.render = function () {
+            const { x, y, radius } = this
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+            ctx.fillStyle = this.getRandomColor();
+            ctx.fill();
+        }
+
+        setInterval(() => {
+            const visibleBalls = []
+            ctx.clearRect(0, 0, 800, 600);
+            for (let i = 0; i < balls.length; i++) {
+                const ball = balls[i];
+                if (ball.update()) {
+                    ball.render();
+                    visibleBalls.push(ball);
+                }
+            }
+
+            balls.length = 0
+            balls.push(...visibleBalls);
+        }, 20)
+    </script>
+</body>
+
+</html>

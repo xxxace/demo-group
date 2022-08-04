@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        function careateWaterMark(options) {
+            if (!options.id) return
+            const canvasId = `#${options.id}`
+            let canvas = document.getElementById(canvasId)
+            canvas = canvas || document.createElement('canvas')
+            canvas.id = options.id
+            document.body.appendChild(canvas)
+
+            canvas.width = options.width || 300
+            canvas.height = options.height || 150
+            canvas.style.display = 'none'
+
+            const ctx = canvas.getContext('2d')
+            ctx.rotate((-20 * Math.PI) / 180)
+            ctx.font = options.font || '16px Microsoft JhengHei'
+            ctx.fillStyle = 'rgba(180, 180, 180, 0.7)'
+            ctx.textAlign = 'left'
+            ctx.textBaseline = 'middle'
+            ctx.fillText(options.text, -30, canvas.height / 1.4)
+
+            const containerId = `#${canvasId}-c-t-@`
+            let container = document.getElementById(containerId)
+            container = container || document.createElement('div')
+            container.id = containerId
+
+            const styleStr = `
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: url(${canvas.toDataURL('image/png')})
+            `
+
+            container.setAttribute('style', styleStr)
+
+            document.body.appendChild(container)
+
+            return {
+                canvasId,
+                containerId,
+                styleStr,
+                canvas,
+                container,
+                options
+            }
+        }
+
+
+        function WaterMark(options) {
+            let waterMark = careateWaterMark(options)
+
+            document.body[`${waterMark.canvasId}-observer`] = new MutationObserver(() => {
+                setTimeout(() => {
+                    const instance = document.getElementById(waterMark.containerId)
+                    const style = instance ? instance.getAttribute('style') : false
+
+                    if (instance && style !== waterMark.styleStr) {
+                        instance.setAttribute('style', waterMark.styleStr)
+                    } else if (!instance) {
+                        waterMark = careateWaterMark(options)
+                    }
+                }, 1000)
+            })
+
+            document.body[`${waterMark.canvasId}-observer`].observe(document.body, {
+                childList: true,
+                attributes: true,
+                subtree: true
+            })
+        }
+
+        WaterMark({
+            font: '20px Microsoft JhengHei',
+            text: '广东智益纺织科技有限公司',
+            id: 'ace',
+            width: 500,
+            height: 200
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/promise.js"></script>
+</head>
+
+<body>
+    <script>
+        // const p = new PromiseX(resolve => {
+        //     setTimeout(() => resolve('1'), 1500);
+        // });
+
+        // const p2 = p.then((y) => {
+        //     console.log('y:', y)
+        //     return p2;
+        // }, (r) => {
+        //     console.log('error:', r)
+        // })
+
+        // p2.then(res => {
+        //     console.log('res:', res)
+        // }, err => {
+        //     console.log('err:', err)
+        // });
+
+
+        new PromiseX((resolve, reject) => {
+            setTimeout(() => {
+                reject('x1x')
+            }, 2000)
+        }).then(res => {
+            console.log('---', res)
+        }).then(res => { }, err => {
+            console.log('---err2', err)
+        })
+
+        // new PromiseX(resolve => {
+        //     resolve('x1x')
+        // }).finally(r => {
+        //     console.log('xx:', r)
+        // }).then(res => {
+        //     console.log('---', res)
+        // }).catch(err=>{
+        //     console.log('---err', err)
+        // })
+
+        // Promise.reject(new Promise(resolve => resolve(5))).then((res) => {
+        //     console.log('x', res)
+        //     return '4'
+        // }, (err) => {
+        //     console.log('x1', err)
+        // }).finally(() => {
+        //     console.log('finally1')
+        // }).then(res => {
+        //     console.log('under finally', res)
+        // })
+
+        // PromiseX.reject(new PromiseX(resolve => resolve(5))).then((res) => {
+        //     console.log('x', res)
+        //     return '4'
+        // }, (err) => {
+        //     console.log('x1', err)
+        // }).finally(() => {
+        //     console.log('finally2')
+        // }).then(res => {
+        //     console.log('under finally', res)
+        // })
+
+        let obj = {
+            a: '1',
+            b: '2',
+            c: '3',
+        }
+
+        // obj[Symbol.iterator] = function () {
+        //     let index = 0;
+        //     let source = this;
+
+        //     return {
+        //         next() {
+        //             let keys = Object.keys(source);
+
+        //             if (index > (keys.length - 1)) {
+        //                 return { value: undefined, done: true }
+        //             } else {
+        //                 return { value: source[keys[index++]], done: false }
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        obj[Symbol.iterator] = function* () {
+            const keys = Object.keys(this);
+
+            for (let i = 0; i < keys.length; i++) {
+                yield this[keys[i]];
+            }
+        }
+        console.log([...obj])
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .switch {
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            overflow: hidden;
+            -webkit-appearance: none;
+            user-select: none;
+            outline: none;
+        }
+
+        .switch .switch-wrapper {
+            position: relative;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .switch .switch-wrapper .switch-checkbox {
+            visibility: hidden;
+        }
+
+        .switch .switch-wrapper label {
+            display: inline-block;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #dcdfe6;
+            outline: none;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background: #dcdfe6;
+            cursor: pointer;
+            transition: border-color .3s, background-color .3s;
+        }
+
+        .switch .switch-wrapper label::before {
+            display: block;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            content: ' ';
+            width: calc(50% - 5px);
+            height: calc(100% - 4px);
+            border: 1px solid transparent;
+            background-color: #ffffff;
+            border-radius: 100%;
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .switch .switch-wrapper [type="checkbox"]:checked+label::before {
+            left: 55%;
+        }
+
+        .switch .switch-wrapper [type="checkbox"]:checked+label {
+            border-color: #0cee57;
+            background-color: #0cee57;
+        }
+
+        .switch .switch-wrapper.danger [type="checkbox"]:checked+label {
+            border-color: #fd352e;
+            background-color: #fd352e;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="switch">
+        <div class="switch-wrapper danger">
+            <input class="switch-checkbox" type="checkbox" id="ace-checkbox2">
+            <label for="ace-checkbox2"></label>
+        </div>
+    </div>
+
+    <div class="switch">
+        <div class="switch-wrapper">
+            <input class="switch-checkbox" type="checkbox" id="ace-checkbox">
+            <label for="ace-checkbox"></label>
+        </div>
+    </div>
+    <script>
+        function utf16to8(str) {
+            var out, i, len, c;
+            out = "";
+            len = str.length;
+            for (i = 0; i < len; i++) {
+                c = str.charCodeAt(i);
+                if ((c >= 0x0001) && (c <= 0x007F)) {
+                    out += str.charAt(i);
+                } else if (c > 0x07FF) {
+                    out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+                    out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+                    out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+                } else {
+                    out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+                    out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+                }
+            }
+            return out;
+        }
+
+        function utf82str(utf) {
+            var str = "";
+            var tmp;
+
+            for (var i = 0; i < utf.length; i++) {
+                // 英文字符集合
+                if (utf.charCodeAt(i) >> 7 == 0x00) {
+                    str += utf.charAt(i);
+                    continue;
+                }
+                // 其他字符集
+                else if (utf.charCodeAt(i) >> 5 == 0x06) {
+                    tmp = ((utf.charCodeAt(i + 0) & 0x1f) << 6) |
+                        ((utf.charCodeAt(i + 1) & 0x3f) << 0);
+                    str += String.fromCharCode(tmp);
+                    i++;
+                    continue;
+                }
+                // 中文字符集
+                else if (utf.charCodeAt(i) >> 4 == 0x0e) {
+                    tmp = ((utf.charCodeAt(i + 0) & 0x0f) << 12) |
+                        ((utf.charCodeAt(i + 1) & 0x3f) << 6) |
+                        ((utf.charCodeAt(i + 2) & 0x3f) << 0);
+                    str += String.fromCharCode(tmp);
+                    i += 2;
+                    continue;
+                }
+                // 其他字符集
+                else if (utf.charCodeAt(i) >> 3 == 0x1f) {
+                    tmp = ((utf.charCodeAt(i + 0) & 0x07) << 18) |
+                        ((utf.charCodeAt(i + 1) & 0x3f) << 12) |
+                        ((utf.charCodeAt(i + 2) & 0x3f) << 6);
+                    ((utf.charCodeAt(i + 3) & 0x3f) << 0);
+                    str += String.fromCharCode(tmp);
+                    i += 3;
+                    continue;
+                }
+                // 非法字符集
+                else {
+                    throw "不是UTF-8字符集"
+                }
+            }
+
+            return str;
+        }
+
+        function decodeStr(str) {
+            var out, i, len, c;
+            var char2, char3;
+            out = "";
+            len = str.length;
+            i = 0;
+            while (i < len) {
+                c = str.charCodeAt(i++);
+                switch (c >> 4) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        // 0xxxxxxx
+                        out += str.charAt(i - 1);
+                        break;
+                    case 12:
+                    case 13:
+                        // 110x xxxx 10xx xxxx
+                        char2 = str.charCodeAt(i++);
+                        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+                        break;
+                    case 14:
+                        // 1110 xxxx 10xx xxxx 10xx xxxx
+                        char2 = str.charCodeAt(i++);
+                        char3 = str.charCodeAt(i++);
+                        out += String.fromCharCode(((c & 0x0F) << 12) |
+                            ((char2 & 0x3F) << 6) |
+                            ((char3 & 0x3F) << 0));
+                        break;
+                }
+            }
+            return out;
+        }
+
+        function str2utf8(str) {
+            // UCS-2和UTF8都是unicode的一种编码方式
+            // js代码中使用的是UCS-2编码
+
+            var code;
+            var utf = "";
+
+            for (var i = 0; i < str.length; i++) {
+                code = str.charCodeAt(i); //返回每个字符的Unicode 编码
+
+                if (code < 0x0080) {
+                    utf += str.charAt(i); //返回指定位置的字符
+                } else if (code < 0x0800) {
+                    utf += String.fromCharCode(0xC0 | ((code >> 6) & 0x1F));
+                    utf += String.fromCharCode(0x80 | ((code >> 0) & 0x3F));
+                } else if (code < 0x10000) {
+                    utf += String.fromCharCode(0xE0 | ((code >> 12) & 0x0F));
+                    utf += String.fromCharCode(0x80 | ((code >> 6) & 0x3F));
+                    utf += String.fromCharCode(0x80 | ((code >> 0) & 0x3F));
+                } else {
+                    throw "不是UCS-2字符集"
+                }
+
+            }
+            return utf;
+        }
+        const template = `
+        \bÍMOÔ@Ç) .!/àV§Îôe*!VEÅÝ$ Í´ng·Û.}¡P?½y01Ïâgð#ø
+<[^\fr1ñæsäÿ{þÏÌügÀçë\`(bhõ¸0µt2
+ËíÛ6vu¨c¡¸©O\\¨ù.2¹Ï13¬ÆÛTpÚKL5$¯ìÈTîîÈRÐ\\\t¦¾&úª¼1|;Û"S
+b)ÄW¶ït^=C1äòwñªÜxÄUj+HÑIµhÊ¯Ïqa&çk?¾ýüôAm\\{(B­Rmªñ^ï¤ ËÆé#U-BqðrÅGj(¢áã<\t×?aå y7Ûç{m¿=p mjñb{k$úÇyw¿gË¾Øxææroo¿Ó9´^6o½É·îÝÑ
+£ª,jè¼LQâyÈÞü.ÛàfÈòÈ
+àë¹a¯ó44@ýBOyOd|\t¸n]h^EÞ8dÇ=¯j¾î^ ùø±¨W\\ñ~.<^E°p\t+-î%üÔWmuçð4!¨¡?V²(-xRÍ7N¤<,¤õe@pÿwÒe³(dR"8{¬Ú´5]©O4hþµ]3\t%#¼àWÉúÄÒ?;ZÿÑÛã§\`ÎÕl´êâÐl,×¥R6KÕ9ó4êSî[>·C.u¿NÎµfÏ®\tîüG³¨§`
+        console.log(str2utf8(template));
+        console.log(decodeStr(template));
+    </script>
+</body>
+
+</html>

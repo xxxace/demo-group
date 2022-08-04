@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @media print {
+            @page {
+                padding: 0;
+                margin: 0;
+            }
+            body {
+                padding: 0;
+                margin: 0;
+            }
+        }
+        
+        .ace-table {
+            width: 400px;
+        }
+        
+        .ace-table .ace-table-container {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            padding-left: 13px;
+            box-sizing: border-box;
+            /*padding-left: 20px;*/
+            /* border: 1px solid #000; */
+        }
+        
+        .ace-table .ace-table-header {
+            height: 67px;
+            /* background-color: red; */
+            /* border-bottom: 1px solid #000; */
+        }
+        
+        .ace-table-tr {
+            display: flex;
+        }
+        
+        .ace-table-td {
+            font-size: 17px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+        
+        .ace-table-td.label {
+            font-size: 16px;
+        }
+        
+        .ace-table-td.border {
+            /* border-right: 1px solid #000;
+            border-bottom: 1px solid #000; */
+        }
+        
+        .qr-code {
+            height: 100%;
+            padding: 2px 0 0 1px;
+            box-sizing: border-box;
+            /* background-color: red; */
+        }
+        
+        .roll-num {
+            font-size: 42px;
+            font-weight: bold;
+            line-height: 44px;
+        }
+        
+        .weight {
+            text-align: center;
+            font-size: 42px;
+            font-weight: bold;
+            line-height: 34px;
+        }
+        
+        .vatNo {
+            font-weight: bold;
+            line-height: 44px;
+        }
+        
+        .custom-width {
+            width: 80px;
+        }
+        
+        .ace-table-tr.bottom {
+            position: relative;
+            height: 128px;
+            padding-top: 13px;
+            box-sizing: border-box;
+        }
+        
+        #qrCode1 {
+            width: 110px;
+            padding-top: 8px;
+            box-sizing: border-box;
+        }
+        
+        #qrCode2 {
+            margin-left: 10px;
+            padding: 2px 0 0 8px;
+            box-sizing: border-box;
+        }
+        
+        #qrCode3 {
+            height: auto !important;
+            position: absolute;
+            right: 105px;
+            bottom: -4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="test"></div>
+    <div id="print-content"></div>
+    <script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="./js/qrcode.js"></script>
+    <script>
+        let info = {
+                data: {
+                    fid: 651,
+                    totalVolume: 38,
+                    completeState: 0,
+                    qcscSalebillno: "XSDD000067",
+                    qcscFactoryno: 101535,
+                    diylength: 310000,
+                    totalLoss: 0,
+                    useEmbryoWeight: 98.58,
+                    startWorkTime: "2021-01-20 15:55:12",
+                    custorderNo: "",
+                    fproductcomment: "",
+                    weight: 124,
+                    qcscCustomer: 100472,
+                    materialName: "GD-1107B天丝桑蚕丝单面提花针织布",
+                    fqccomment1: "阿测22221",
+                    fdefectunitId: "5e0d912264b104",
+                    fqccomment2: "测试11112",
+                    qcscBrand: " ",
+                    mergeDyeLot: "G19090029",
+                    fgramweight: 165,
+                    customerPo: "",
+                    fproblem: "",
+                    goodsShelf: "",
+                    fdefectunit: "分数",
+                    targetName: "175CM(实用) 165G/M2  C:61 W:38",
+                    fcsrcolornumber: " ",
+                    __row_number__: 1,
+                    fabricLoss: 0,
+                    rawMaterial: 526.5,
+                    fmeterweight: 0.4,
+                    actoryColorNo: "ZTC318306B",
+                    totalEmbryoWeight: 896.19,
+                    useVolume: 4,
+                    fdate: "2019-10-25 00:00:00",
+                    fbreadth: 175,
+                    rollNum: 0,
+                    fabricWeight: 0,
+                    hangStatus: " ",
+                    fshortName: " ",
+                    specialRequire: "180-300回后(测试)",
+                    qcscVatno: "G19100094-R 1",
+                    stQcscAppearancedefectN: 0.25,
+                    materialCode: "CH000033",
+                    fColor2: "ZZ18AF165Z-GD-1107B 8AF藏蓝",
+                    customerArticle: "GD-1107B",
+                    totalRawMaterial: 896.19,
+                    qcscCustomerName: "广东兆天纺织科技有限公司",
+                    fSttSerialnumber: "34"
+                }
+            }
+            // 执行渲染
+        renderTemplate(info.data)
+
+        function getFloatValue(val, fiexed = 0) {
+            return val && val.toString() !== '0' ? parseFloat(val).toFixed(fiexed) : ''
+        }
+
+        function renderTemplate(params = {}) {
+            let weight = getFloatValue(params.weight, 1)
+
+            const template = `
+        <div class="ace-table ace-table-wrapper">
+        <div class="ace-table-container">
+            <div class="ace-table-header"></div>
+            <div class="ace-table-body">
+                <section class="ace-table-tr" style="height: 120px">
+                    <div class="ace-table-td" style="flex: 1;">
+                        <section class="ace-table-tr" style="height: 35px;">
+                            <div class="ace-table-td border label custom-width">
+
+                            </div>
+                            <div class="ace-table-td border" style="flex:1">${params.customerArticle || ''}</div>
+                        </section>
+                        <section class="ace-table-tr" style="height: 58px;">
+                            <div class="ace-table-td border label custom-width">
+
+                            </div>
+                            <div class="ace-table-td border" style="flex:1;line-height: 16px;"><p style="padding: 0;margin: 0;max-width:140px;">${params.fcsrcolornumber || ''}#${params.fColor2 || ''} ${params.requireCard || ''}</p></div>
+                        </section>
+                        <section class="ace-table-tr" style="height: 29px;">
+                            <div class="ace-table-td border label custom-width">
+
+                            </div>
+                            <div class="ace-table-td border" style="flex:1">${params.actoryColorNo || ''}</div>
+                        </section>
+                    </div>
+                    <div id="qrCode1" class="qr-code"></div>
+                </section>
+
+                <section class="ace-table-tr">
+                    <div class="ace-table-td border label custom-width" style="height: 69px;">
+
+                    </div>
+                    <div class="ace-table-td border" style="flex:1;padding-top:8px">${params.materialName || ''}</div>
+                </section>
+
+                <section class="ace-table-tr" style="height: 45px;position: relative">
+                    <div class="ace-table-td border label custom-width"></div>
+                    <div class="ace-table-td border vatNo" style="flex:1">${params.qcscVatno || ''}</div>
+                    <div id="qrCode3" class="qr-code"></div>
+                    <div class="ace-table-td border roll-num" style="width: 80px;padding-left: 15px;box-sizing: border-box;">${params.fSttSerialnumber || ''}</div>
+                </section>
+
+                <section class="ace-table-tr bottom">
+                    <div id="qrCode2" class="qr-code"></div>
+                    <div class="ace-table-td" style="flex: 1;">
+                        <section class="ace-table-tr">
+                            <div class="ace-table-td border label" style="width: 73px;height: 35px;">
+
+                            </div>
+                            <div class="ace-table-td border" style="flex:1;">${params.fbreadth || ''}实用</div>
+                        </section>
+                        <section class="ace-table-tr">
+                            <div class="ace-table-td border label" style="width:73px;height: 35px;">
+
+                            </div>
+                            <div class="ace-table-td border" style="flex:1;">${params.specialRequire || ''}</div>
+                        </section>
+                        <section class="ace-table-tr">
+                            <div class="ace-table-td border weight" style="flex:1;height: 34px;">${weight}</div>
+                        </section>
+                    </div>
+                     <div id="qrCode3" class="qr-code"></div>
+                </section>
+            </div>
+        </div>
+    </div>
+    `
+            document.querySelector('#print-content').innerHTML = template
+            let codeTemplate = `${params.qcscVatno || ''}$${params.fSttSerialnumber || ''}$${params.customerArticle || ''}$${params.materialName || ''}$${params.fcsrcolornumber || ''}$${params.fColor2 || ''}$${weight || ''}`
+            $('#qrCode1').qrcode({
+                width: 110,
+                height: 110,
+                text: codeTemplate
+            })
+
+            $('#qrCode2').qrcode({
+                width: 110,
+                height: 110,
+                text: codeTemplate
+            })
+            $('#qrCode3').qrcode({
+                width: 50,
+                height: 50,
+                text: `${params.qcscVatno || ''}#${params.fSttSerialnumber || ''}#${weight}@10`,
+                correctLevel: 1
+            })
+        }
+    </script>
+</body>
+
+</html>

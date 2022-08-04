@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrap {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            /* margin: 20% auto; */
+        }
+
+        .panel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: cadetblue;
+            border-radius: 50%;
+        }
+
+        .panel-body {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .panel-body>div {
+            position: absolute;
+            top: -155px;
+            left: -29px;
+            width: 60px;
+            transform-origin: bottom;
+            background: antiquewhite;
+            height: 155px;
+            text-align: center;
+        }
+
+        .panel-body>div:nth-child(1) {
+            transform: rotate(30deg);
+        }
+
+        .panel-body>div:nth-child(2) {
+            transform: rotate(90deg);
+        }
+
+        .panel-body>div:nth-child(3) {
+            transform: rotate(150deg);
+        }
+
+        .panel-body>div:nth-child(4) {
+            transform: rotate(210deg);
+        }
+
+        .panel-body>div:nth-child(5) {
+            transform: rotate(270deg);
+        }
+
+        .panel-body>div:nth-child(6) {
+            transform: rotate(330deg);
+        }
+
+        .transition {
+            transition: all 1s;
+        }
+
+        .pointer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: beige;
+            text-align: center;
+            line-height: 80px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .pointer::before {
+            content: "";
+            display: block;
+            position: absolute;
+            background-color: red;
+            width: 2px;
+            height: 50px;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+    <link rel="stylesheet" href="./css/test.css">
+</head>
+
+<body>
+    <div>当前主题：<span id="theme-name">./css/test.css</span></div>
+    <button id="switchBtn">更换主题</button>
+    <button id="deleteBtn">删除主题</button>
+    <div>
+        <ol>
+            <li>1元大礼</li>
+            <li>5元大礼</li>
+            <li>未中奖</li>
+            <li>7元大礼</li>
+            <li>未中奖</li>
+            <li>9999元大礼</li>
+        </ol>
+
+        <div>结果：<span id="result"></span></div>
+    </div>
+    <div class="wrap">
+        <div class="panel">
+            <div class="panel-body">
+                <div class="item-1">1</div>
+                <div class="item-2">2</div>
+                <div class="item-3">3</div>
+                <div class="item-4">4</div>
+                <div class="item-5">5</div>
+                <div class="item-6">6</div>
+            </div>
+        </div>
+        <div class="pointer">抽奖</div>
+    </div>
+    <script>
+        const awardList = {
+            '6': {
+                name: '9999元现金券',
+                level: 1,
+                probability: 0.001
+            },
+            '5': {
+                name: '很遗憾，未中奖！',
+                level: 5,
+                probability: 0.3
+            },
+            '4': {
+                name: '恭喜获得7元现金券！',
+                level: 2,
+                probability: 0.05
+            },
+            '3': {
+                name: '很遗憾，未中奖！',
+                level: 5,
+                probability: 0.3
+            },
+            '2': {
+                name: '恭喜获得5元优惠券！',
+                level: 3,
+                probability: 0.149
+            },
+            '1': {
+                name: '恭喜获得1元现金！',
+                level: 4,
+                probability: 0.2
+            }
+        }
+
+        // const awardList = {
+        //     '6': {
+        //         name: '9999元现金券',
+        //         level: 1,
+        //         probability: 0.5
+        //     },
+        //     '5': {
+        //         name: '很遗憾，未中奖！',
+        //         level: 5,
+        //         probability: 0.1
+        //     },
+        //     '4': {
+        //         name: '恭喜获得7元现金券！',
+        //         level: 2,
+        //         probability: 0.1
+        //     },
+        //     '3': {
+        //         name: '很遗憾，未中奖！',
+        //         level: 5,
+        //         probability: 0.1
+        //     },
+        //     '2': {
+        //         name: '恭喜获得5元优惠券！',
+        //         level: 3,
+        //         probability: 0.1
+        //     },
+        //     '1': {
+        //         name: '恭喜获得1元现金！',
+        //         level: 4,
+        //         probability: 0.1
+        //     }
+        // }
+        let deg = 0
+        let cat = 60
+        let isRotating = false
+        const juger = getRangeJudger()
+        const themeName = localStorage.getItem('theme-name')
+        const pointer = document.querySelector('.pointer')
+        const panel = document.querySelector('.panel')
+        const result = document.querySelector('#result')
+
+        pointer.addEventListener('click', function (e) {
+            if (!isRotating) {
+                isRotating = true
+                panel.classList.remove('transition')
+                panel.style.transform = `rotate(0deg)`
+                setTimeout(function () {
+                    panel.classList.add('transition')
+                    pointer.innerHTML = '旋转中'
+                    deg = juger(Math.floor(Math.random() * 1000))
+                    panel.style.transform = `rotate(${deg + (360 * 10)}deg)`
+                    setTimeout(() => {
+                        isRotating = false
+                        pointer.innerHTML = '抽奖'
+                        result.innerText = getAward(deg)
+                    }, 1000)
+                }, 50)
+            }
+        })
+
+        function getAward(deg) {
+            deg = Math.abs(deg)
+            let msg = ''
+
+            if (deg <= 60) {
+                msg = '恭喜获得1元现金！'
+            } else if (deg <= 120) {
+                msg = '恭喜获得5元优惠券！'
+            } else if (deg <= 180) {
+                msg = '很遗憾，未中奖！'
+            } else if (deg <= 240) {
+                msg = '恭喜获得7元现金券！'
+            } else if (deg <= 300) {
+                msg = '很遗憾，未中奖！'
+            } else if (deg <= 360) {
+                msg = '恭喜获得9999元现金券！'
+            }
+
+            return msg
+        }
+
+        const switchBtn = document.querySelector('#switchBtn')
+        switchBtn.addEventListener('click', function () {
+            const link = document.getElementById('theme')
+            if (!link) loadStyleLink('./css/test2.css')
+        })
+
+        const deleteBtn = document.querySelector('#deleteBtn')
+        deleteBtn.addEventListener('click', function () {
+            removeLink('theme')
+        })
+
+        if (themeName) loadStyleLink(themeName)
+
+        function removeLink(id) {
+            const link = document.getElementById(id)
+            if (link) {
+                document.body.removeChild(link)
+                localStorage.removeItem('theme-name')
+                let label = document.querySelector('#theme-name')
+                label.innerText = './css/test.css'
+            }
+        }
+        function loadStyleLink(herf) {
+            const link = document.createElement('link')
+            link.id = 'theme'
+            link.rel = 'stylesheet'
+            link.href = herf
+            document.body.append(link)
+            localStorage.setItem('theme-name', herf)
+            let label = document.querySelector('#theme-name')
+            label.innerText = herf
+        }
+
+        function getRangeJudger() {
+            let max = 1000
+            let count = 0
+            let rangeMap = {}
+            let keys = Object.keys(awardList)
+
+            for (let key of keys.reverse()) {
+                const a = awardList[key]
+                count = max * a.probability + count
+                rangeMap[count] = key
+            }
+
+            return function juger(range) {
+                let index = -1
+                for (let k in rangeMap) {
+                    const value = Number(k)
+                    if (range <= value) {
+                        index = Number(rangeMap[k])
+                        break
+                    }
+                }
+
+                const deg = index * 60
+                const result = Math.floor(Math.random() * (60) + (deg - 60))
+                console.log(index, awardList[index].name)
+                return -result
+            }
+        }
+    </script>
+</body>
+
+</html>

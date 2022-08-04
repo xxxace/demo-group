@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .image-list {
+            height: 90vh;
+            width: 180px;
+            padding: 10px 10px;
+            border: 1px solid #000;
+            overflow: hidden auto;
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+        }
+
+        .ace-image {
+            width: 150px;
+            height: 100px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="image-list"></div>
+    <script>
+        window.onload = function () {
+            let viewportHeight
+            let loadImageCount = 0
+            let imageList = document.querySelector('.image-list')
+            let imageSrc = '../images/bg.jpg'
+
+            function computedViewportHeight() {
+                viewportHeight = imageList.clientHeight
+            }
+
+            function throttle(handler, wait) {
+                if (!wait) wait = 300
+
+                let timer = null
+                let previous = 0
+                return function () {
+                    let current = new Date()
+                    let interval = wait - (current - previous)
+                    let self = this || window
+                    let args = arguments
+
+                    if (interval < 0) {
+                        clearTimeout(timer)
+                        timer = null
+                        handler.apply(self, args)
+                        previous = new Date()
+                    } else if (!timer) {
+                        timer = setTimeout(function () {
+                            clearTimeout(timer)
+                            timer = null
+                            handler.apply(self, args)
+                            previous = new Date()
+                        }, interval)
+                    }
+                }
+            }
+
+            function createImage() {
+                let img = document.createElement('img')
+                img.className = 'ace-image'
+                img.setAttribute('data-src', imageSrc)
+                return img
+            }
+
+            function addImage() {
+                let fragment = document.createDocumentFragment()
+
+                for (let i = 0; i < 20; i++) {
+                    fragment.append(createImage())
+                }
+
+                imageList.append(fragment)
+            }
+
+            let loadImageHandler = throttle(loadImage, 1000)
+            let renderHandler = throttle(render, 1000)
+
+            function loadImage() {
+                const imgs = imageList.querySelectorAll('.ace-image')
+
+                if (loadImageCount === imgs.length) {
+                    imageList.removeEventListener('scroll', loadImageHandler)
+                    window.removeEventListener('resize', renderHandler)
+                    return
+                }
+
+                const viewportPosition = viewportHeight + imageList.scrollTop
+
+                for (let i = loadImageCount; i < imgs.length; i++) {
+                    const img = imgs[i]
+                    const src = img.getAttribute('data-src')
+
+                    if (src && img.offsetTop < viewportPosition) {
+                        img.src = src
+                        img.removeAttribute('data-src')
+                        loadImageCount++
+                    }
+                }
+            }
+
+            function render() {
+                computedViewportHeight()
+                loadImage()
+            }
+
+            addImage()
+            render()
+
+            imageList.addEventListener('scroll', loadImageHandler)
+            window.addEventListener('resize', renderHandler)
+        }
+    </script>
+</body>
+
+</html>

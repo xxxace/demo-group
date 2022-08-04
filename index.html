@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式DEMO</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" media="screen and (max-width:1199px)" href="./css/m.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="./js/index.js"></script>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo"><span>阿测前端</span></div>
+        <div class="hidden">xxxx</div>
+        <nav class="nav-bar">
+            <ul class="nav-bar-body">
+                <li class="nav-bar-item"><a href="#">首页</a></li>
+                <li class="nav-bar-item"><a href="#">关于我们</a></li>
+                <li class="nav-bar-item"><a href="#">产品</a></li>
+                <li class="nav-bar-item"><a href="#">其它</a></li>
+            </ul>
+        </nav>
+        <button class="menu-btn">菜单</button>
+    </header>
+    <div class="banner">
+        <img src="./images/bg.jpg" alt="" class="backgroud">
+        <div class="user">
+            <img src="./images/default.JPG" alt="阿测" class="user-avatar">
+            <div class="user-name"><span>阿测</span></div>
+        </div>
+    </div>
+    <div class="content">
+        <section class="inner">
+            <div class="list-card">
+                <div class="list-card-body"></div>
+            </div>
+            <div class="list-card">
+                <div class="list-card-body"></div>
+            </div>
+            <div class="list-card">
+                <div class="list-card-body"></div>
+            </div>
+            <div class="list-card">
+                <div class="list-card-body"></div>
+            </div>
+        </section>
+    </div>
+    <script>
+        function debounce(fn, delay, triggrNow) {
+            let t = null,
+                res = ''
+
+            return function() {
+                let _self = this,
+                    args = arguments
+
+                if (t) clearTimeout(t)
+                if (triggrNow) {
+                    let exce = !t
+                    t = setTimeout(() => t = null, delay)
+                    if (exce) res = fn.apply(_self, args)
+                } else {
+                    t = setTimeout(() => res = fn.apply(_self, args), delay)
+                }
+                return res
+            }
+        }
+        let inner = document.querySelector('.user-avatar');
+
+        function throttle(fn, delay) {
+            let t = null,
+                begin = new Date().getTime()
+
+            return function() {
+                let _self = this,
+                    args = arguments,
+                    res = '',
+                    curr = new Date().getTime()
+
+                t && clearTimeout(t)
+
+                if (curr - begin >= begin) {
+                    res = fn.apply(_self, args)
+                    begin = curr
+                } else {
+                    t = setTimeout(() => res = fn.apply(_self, args), delay)
+                }
+                return res
+            }
+        }
+
+        inner.addEventListener('click', throttle(function(e) {
+            this.style.cssText = `width:${Math.ceil(Math.random() * 400)}px; height:${Math.ceil(Math.random() * 400)}px`
+        }, 1000))
+
+        let form = {
+            id: 0,
+            entry: [{
+                name: 'test'
+            }]
+        }
+        console.log(JSON.stringify(form));
+        form = Object.assign(form, {
+            id: 1,
+            entry: [{
+                naem: 'xxx'
+            }, {
+                name: 'xxx2'
+            }]
+        })
+        console.log(`{"id":0,"billNo":"","billStatus":"B","sourceType":"C","entry":[{"id":0,"articleNo":"","materialName":"","densityC":"","densityW":"","ypGramWeight":"","ypDensityC":"","ypDensityW":"","ypYarnLong":"","ypGrayClothLong":"","ypCookBefore":"","zbGramWeight":"","zbDensityC":"","zbDensityW":"","zbYarnLong":"","zbLong":"","zbCookAfter":"","ypGsm":0,"zbGsm":0,"ypTotalNeedle":0,"zbTotalNeedle":0,"avgTotalNeedle":0,"ypCoilWeight":0,"zbCoilWeight":0,"avgCoilWeight":0,"comment":"","remark":""}]}` === `{"id":0,"billNo":"","billStatus":"B","sourceType":"C","entry":[{"id":0,"articleNo":"","materialName":"","densityC":"","densityW":"","ypGramWeight":"","ypDensityC":"","ypDensityW":"","ypYarnLong":"","ypGrayClothLong":"","ypCookBefore":"","zbGramWeight":"","zbDensityC":"","zbDensityW":"","zbYarnLong":"","zbLong":"","zbCookAfter":"","ypGsm":0,"zbGsm":0,"ypTotalNeedle":0,"zbTotalNeedle":0,"avgTotalNeedle":0,"ypCoilWeight":0,"zbCoilWeight":0,"avgCoilWeight":0,"comment":"","remark":""}]}`);
+    </script>
+</body>
+
+</html>

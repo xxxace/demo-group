@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const {
+            defineComponent,
+            ref,
+            computed,
+            onMounted,
+            getCurrentInstance,
+            onUnmounted,
+            createApp,
+            h
+        } = Vue
+
+        const DatePanel = defineComponent({
+            props: {
+                radius: {
+                    type: Number,
+                    default: 60,
+                },
+            },
+            setup(props, ctx) {
+                const list = getDateList();
+                const vm = getCurrentInstance();
+                const {
+                    x,
+                    y,
+                    enter,
+                    height
+                } = useMousePosition(vm);
+                const maskStyle = computed(() => {
+                    return {
+                        transform: `translate(${x.value}px, ${y.value}px)`,
+                        backgroundImage: enter.value ?
+                            `radial-gradient(transparent, #000 ${props.radius}px)` :
+                            "",
+                        backgroundColor: enter.value ? "" : "#000",
+                        height: height.value + "px",
+                    };
+                });
+                return {
+                    dateList: list.map((it) => it.date()),
+                    weeks: ["日", "一", "二", "三", "四", "五", "六"],
+                    maskStyle,
+                    x,
+                    y,
+                };
+            },
+            template: `
+  <div class="date-panel">
+    <div class="cell-list week-list">
+      <div class="cell-item" v-for="item in weeks" :key="item">
+        <span>{{ item }}</span>
+      </div>
+    </div>
+    <div class="cell-list date-list">
+      <div class="cell-item" v-for="item in dateList" :key="item">
+        <div class="date-cell">
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mask" :style="maskStyle"></div>
+  </div>
+`
+        });
+
+        // 获取鼠标位置
+        function useMousePosition(vm) {
+            let x = ref(0);
+            let y = ref(0);
+            let enter = ref(false);
+            let height = ref(600);
+            let rect = {
+                top: 0,
+                left: 0,
+            };
+
+            function onEnter(e) {
+                const el = vm.ctx.$el;
+                if (!el) return;
+                enter.value = true;
+                rect = el.getBoundingClientRect();
+                height.value = rect.width * 2;
+            }
+
+            function onMove(e) {
+                const {
+                    clientX,
+                    clientY
+                } = e;
+                x.value = clientX - rect.left - rect.width;
+                y.value = clientY - rect.top - rect.width;
+            }
+
+            function onLeave() {
+                enter.value = false;
+            }
+
+            onMounted(() => {
+                const el = vm.ctx.$el;
+                if (!el) return;
+                el.addEventListener("mouseenter", onEnter);
+                el.addEventListener("mousemove", onMove);
+                el.addEventListener("mouseleave", onLeave);
+            });
+
+            onUnmounted(() => {
+                const el = vm.ctx.$el;
+                if (!el) return;
+                el.removeEventListener("mousemove", onMove);
+                el.removeEventListener("mouseenter", onEnter);
+                el.removeEventListener("mouseleave", onLeave);
+            });
+
+            return {
+                x,
+                y,
+                enter,
+                height,
+            };
+        }
+
+        // 生成日历表
+        function getDateList() {
+            // 本月第一天
+            const day0 = dayjs().startOf("month");
+            // 本月第一个星期的星期日
+            const firstDay = day0.subtract(day0.get("day"), "day");
+            // 星期数,以上月剩余天数+本月天数
+            const rows = Math.ceil((day0.get("day") + day0.daysInMonth()) / 7);
+            return Array(rows * 7)
+                .fill(0)
+                .map((n, i) => firstDay.add(i, "day"));
+        }
+
+        // 挂载组件
+        const App = defineComponent({
+            components: {
+                DatePanel
+            },
+            template: `
+  <div>
+<DatePanel />
+</div>
+`
+        })
+
+        createApp(App).mount("#app");
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+        body,
+        html,
+        p {
+            padding: 0;
+            margin: 0;
+            font-weight: bold;
+        }
+        
+        @page {
+            margin: 0px;
+        }
+        
+        .box {
+            width: 360px;
+            position: relative;
+            left: 40px;
+        }
+        
+        .name {
+            word-wrap: break-word;
+            text-align: justify;
+        }
+        
+        table {
+            margin: 2px auto 0 auto;
+            width: 360px;
+            height: 290px;
+            border-collapse: collapse;
+        }
+        /*table,*/
+        
+        td {
+            height: 45px;
+            overflow: hidden;
+            border: 2px solid black;
+            /*padding: 4px 4px 4px 8px;*/
+        }
+        
+        tr td:nth-child(odd) {
+            width: 60px !important;
+            font-size: 0.8em;
+        }
+        
+        tr td:nth-child(even) {
+            font-size: 0.8em;
+        }
+        
+        tr td:nth-child(odd) p {
+            text-align: center;
+        }
+        
+        .em09 {
+            font-size: 0.96em !important;
+        }
+        
+        .em08 {
+            font-size: 0.8em !important;
+        }
+        
+        .padding0 {
+            padding: 0 !important;
+        }
+        
+        .paddingL {
+            padding: 8px !important;
+        }
+        
+        .short-td-row td {
+            height: 32px!important;
+        }
+        
+        #qrcode {
+            background: #FFFFFF;
+            padding: 2px;
+            position: absolute;
+            top: 3px;
+            right: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="Body"></div>
+    <script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="./js/qrcode.js"></script>
+    <script>
+        let info = {
+                data: {
+                    fid: 651,
+                    totalVolume: 38,
+                    completeState: 0,
+                    qcscSalebillno: "XSDD000067",
+                    qcscFactoryno: 101535,
+                    diylength: 310000,
+                    totalLoss: 0,
+                    useEmbryoWeight: 98.58,
+                    startWorkTime: "2021-01-20 15:55:12",
+                    custorderNo: "",
+                    fproductcomment: "",
+                    weight: 124,
+                    qcscCustomer: 100472,
+                    materialName: "GD-1107B天丝桑蚕丝单面提花针织布",
+                    fqccomment1: "阿测22221",
+                    fdefectunitId: "5e0d912264b104",
+                    fqccomment2: "测试11112",
+                    qcscBrand: " ",
+                    mergeDyeLot: "G19090029",
+                    fgramweight: 165,
+                    customerPo: "",
+                    fproblem: "",
+                    goodsShelf: "",
+                    fdefectunit: "分数",
+                    targetName: "175CM(实用) 165G/M2  C:61 W:38",
+                    fcsrcolornumber: " ",
+                    __row_number__: 1,
+                    fabricLoss: 0,
+                    rawMaterial: 526.5,
+                    fmeterweight: 0.4,
+                    actoryColorNo: "ZTC318306B",
+                    totalEmbryoWeight: 896.19,
+                    useVolume: 4,
+                    fdate: "2019-10-25 00:00:00",
+                    fbreadth: 175,
+                    rollNum: 0,
+                    fabricWeight: 0,
+                    hangStatus: " ",
+                    fshortName: " ",
+                    specialRequire: "180-300回后(测试)",
+                    qcscVatno: "G19100094-R 1",
+                    stQcscAppearancedefectN: 0.25,
+                    materialCode: "CH000033",
+                    fColor2: "ZZ18AF165Z-GD-1107B 8AF藏蓝",
+                    customerArticle: "GD-1107B",
+                    totalRawMaterial: 896.19,
+                    qcscCustomerName: "广东兆天纺织科技有限公司",
+                    fSttSerialnumber: "34"
+                }
+            }
+            // 执行渲染
+        createTable(info.data)
+
+        function createTable(params = {}) {
+            let weight = params.weight && params.weight.toString() !== '0' ? parseFloat(params.weight).toFixed(1) : ''
+            let diylength = params.diylength && params.diylength.toString() !== '0' ? parseFloat(params.diylength).toFixed(1) : ''
+            let fweightlb = params.fweightlb && params.fweightlb.toString() !== '0' ? parseFloat(params.fweightlb).toFixed(1) : ''
+            let yardsLong = params.yardsLong && params.yardsLong.toString() !== '0' ? parseFloat(params.yardsLong).toFixed(1) : ''
+            document.getElementById('Body').innerHTML = `
+        <article class="box">
+            <table>
+                <tr>
+                <td class="padding0">
+                    <p>客户</p>
+                    <p>Client</p>
+                </td>
+                <td colspan="3" class="em09" style="padding-left: 8px">${params.finalcust || ''}</td>
+                </tr>
+                <tr>
+                    <td class="padding0">
+                        <p>单号</p>
+                        <p>Order</p>
+                    </td>
+                    <td colspan="3" class="em09" style="padding-left: 8px">${params.customerPo || ''}</td>
+                </tr>
+                <tr>
+                <td class="padding0">
+                    <p>批号</p>
+                    <p>P.O#</p>
+                </td>
+                <td colspan="3" class="em09" style="max-width: 111px;padding-left: 8px;">
+                    <span style="word-wrap: break-word;word-break: normal;">${params.custorderNo || ''}</span>
+                </td>
+                </tr>
+                <tr>
+                    <td class="padding0">
+                        <p>缸号</p>
+                        <p>Bat No.</p>
+                    </td>
+                    <td class="em09" style="width:100px;padding-left: 8px">${params.qcscVatno || ''}</td>
+                    <td class="padding0">
+                        <p>疋号</p>
+                        <p>RollNo</p>
+                    </td>
+                    <td style="text-align:center;font-size: 35px;font-weight: bold">${params.fSttSerialnumber || ''}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>布类</p>
+                        <p>Fabric</p>
+                    </td>
+                    <td colspan="3" class="em09" style="height:43px;padding-left: 8px">
+                        <span class='name'>${params.materialName || ''}</span>
+                    </td>
+                <tr>
+                <tr>
+                    <td>
+                        <p>颜色</p>
+                        <p>Color</p>
+                    </td>
+                    <td colspan="3" class="em08" style="padding-left: 8px">${params.fcsrcolornumber || ''} ${params.fColor2 || ''} ${params.requireCard || ''}</td>
+                </tr>
+                <tr class="short-td-row">
+                <td class="padding0">
+                    <p>封度</p>
+                    <p>Width</p>
+                </td>
+                <td class="em09" style="padding-left: 8px">${params.fbreadth ? params.fbreadth + ' CM' : ''}</td>
+                <td class="padding0">
+                    <p>克重</p>
+                    <p>Gram</p>
+                </td>
+                <td class="em09" style="padding-left: 8px">${params.fgramweight ? params.fgramweight + ' G/M2' : ''}</td>
+                </tr>
+                <tr class="short-td-row">
+                    <td class="padding0" rowspan="2">
+                        <p>重量</p>
+                        <p>Weight</p>
+                    </td>
+                    <td class="em09" style="padding-left: 8px">${weight + ' 千克'}</td>
+                    <td class="padding0" rowspan="2">
+                        <p>长度</p>
+                        <p>Length</p>
+                    </td>
+                    <td class="em09" style="padding-left: 8px">${diylength + ' 米'}</td>
+                </tr>
+                <tr class="short-td-row">
+                    <td class="em09" style="padding-left: 8px">${fweightlb + ' 磅'}</td>
+                    <td class="em09" style="padding-left: 8px">${yardsLong + ' 码'}</td>
+                </tr>
+        </table>
+        <div id="qrcode"></div>
+    </article>`
+
+            $('#qrcode').qrcode({
+                width: 90,
+                height: 87,
+                text: `${params.qcscVatno || ''}#${params.fSttSerialnumber || ''}#${weight}@10`,
+                correctLevel: 1
+            })
+        }
+    </script>
+</body>
+
+</html>

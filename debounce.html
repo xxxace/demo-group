@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="test">test</button>
+    <script>
+        function throttle(handler, delay) {
+            if (typeof handler !== 'function') throw new Error('parameter "hanlder" type must be a Function.');
+            if (typeof delay === "undefined") delay = 300;
+
+            let lock = false;
+
+            return function proxy(...args) {
+                if (lock) return
+                lock = true
+                const self = this || window
+
+                setTimeout(function () {
+                    lock = false
+                }, delay)
+
+                return handler.apply(self, args)
+            }
+        }
+
+        function throttle2(handler, delay) {
+            if (typeof handler !== 'function') throw new Error('parameter "hanlder" type must be a Function.');
+            if (typeof delay === "undefined") delay = 300;
+
+            let timer = null
+            let previous = 0;
+
+            return function proxy(...args) {
+                let now = new Date()
+                const self = this || window
+                const interval = delay - (now - previous)
+
+                if (interval <= 0) {
+                    clearTimeout(timer)
+                    timer = null
+                    const ret = handler.apply(self, args)
+                    previous = new Date()
+                    return ret
+                } else if (!timer) {
+                    timer = setTimeout(function () {
+                        clearTimeout(timer)
+                        timer = null
+                        const ret = handler.apply(self, args)
+                        previous = new Date()
+                        return ret
+                    }, interval)
+                }
+            }
+        }
+
+        function debounce(handler, delay, immediate) {
+            if (typeof handler !== 'function') throw new Error('parameter "hanlder" type must be a Function.');
+            if (typeof delay === "undefined") delay = 300;
+            if (typeof delay === "boolean") {
+                immediate = delay;
+                delay = 300;
+            }
+
+            let timer;
+
+            return function proxy(...args) {
+                if (timer) clearTimeout(timer);
+                let self = this || window;
+                let init = immediate && !timer
+
+                timer = setTimeout(function () {
+                    timer = null
+                    const ret = !immediate ? handler.apply(self, args) : null;
+                    return ret;
+                }, delay)
+
+                if (init) {
+                    return handler.apply(self, args);
+                }
+            }
+        }
+
+        const testFunc = debounce(function (e) {
+            console.log('fired')
+        }, 3000,true)
+
+        const button = document.getElementById('test')
+        button.addEventListener('click', testFunc)
+        // window.addEventListener('mousemove', testFunc)
+
+
+
+        function throttle_1(cb, delay) {
+            if (typeof cb !== "function") {
+                throw new Error('property callback type should be a Function.')
+            }
+            if (!delay) delay = 1000
+
+            let timer = null
+            let previous = 0
+
+            return function (...args) {
+                const curr = new Date();
+                const interval = delay - (curr - previous)
+                const self = this || window
+                if (interval <= 0) {
+                    clearTimeout(timer)
+                    timer = null
+                    cb.apply(self, args)
+                    previous = new Date();
+                } else if (!timer) {
+                    timer = setTimeout(() => {
+                        clearTimeout(timer)
+                        timer = null
+                        cb.apply(self, args)
+                        previous = new Date();
+                    }, interval)
+                }
+            }
+        }
+
+        function debounce_1(cb, delay, immediate) {
+            if (typeof cb !== "function") {
+                throw new Error('property callback type should be a Function.')
+            }
+            if (typeof delay === "undefined") {
+                delay = 500
+            }
+            if (typeof delay === "boolean") {
+                immediate = delay
+                delay = 500
+            }
+
+            let timer = null
+            return function (...args) {
+                if (timer) clearTimeout(timer)
+                const self = this || window
+                const init = immediate && !timer
+
+                timer = setTimeout(() => {
+                    timer = null
+                    !immediate ? cb.apply(self, args) : null
+                }, delay)
+
+                if (init) cb.apply(self, args)
+            }
+        }
+    </script>
+</body>
+
+</html>

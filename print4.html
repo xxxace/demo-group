@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>丽彩棉打印模板</title>
+    <style>
+        body,
+        html,
+        p {
+            padding: 0;
+            margin: 0;
+        }
+        
+        @page {
+            margin: 0px;
+        }
+        
+        .ace-table {
+            width: 367px;
+            max-width: 367px;
+            border-collapse: collapse;
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        td {
+            height: 36px;
+            max-height: 36px;
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+        }
+        
+        .small {
+            font-size: 12px;
+        }
+        
+        .large {
+            font-size: 26px;
+            font-weight: 500;
+        }
+        
+        #qrcode img {
+            margin: 0 auto;
+        }
+        
+        .qrcode-wrapper {
+            display: flex;
+            padding: 5px 0;
+            box-sizing: border-box;
+            /* justify-content: space-evenly; */
+        }
+        
+        .qrcode-label {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- <table class="ace-table">
+            <tbody boder>
+                <tr>
+                    <td width="60">品名</td>
+                    <td colspan="3">921#</td>
+                </tr>
+                <tr>
+                    <td width="60">颜色</td>
+                    <td width="170">V1</td>
+                    <td width="60">匹号</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td width="60">缸号</td>
+                    <td>CA683571</td>
+                    <td colspan="2" rowspan="5">
+                        <div id="qrcode"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="60" class="small">幅宽-cm</td>
+                    <td>实用136 CM</td>
+                </tr>
+                <tr>
+                    <td width="60" class="small">克重-g/m2</td>
+                    <td>210 G</td>
+                </tr>
+                <tr>
+                    <td width="60" class="small">数量/KG</td>
+                    <td class="large">26.6</td>
+                </tr>
+                <tr>
+                    <td width="60">码数/Y</td>
+                    <td class="large">101.8</td>
+                </tr>
+                <tr>
+                    <td width="60">备注</td>
+                    <td colspan="3">HQ21-80603201-HQ21041201/2Q3DZ628/952128132</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="qrcode-wrapper">
+                            <div class="qrcode-label">染厂二维码：</div>
+                            <div id="zy_qrcode1"></div>
+                            <div id="zy_qrcode2"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table> -->
+    </div>
+    <script type="text/javascript" src="./qrcode.min.js"></script>
+    <script>
+        function createTable() {
+            const htmlText = `
+        <table class="ace-table">
+        <tbody boder>
+        <tr>
+            <td width="60">品名</td>
+            <td colspan="3">921#</td>
+        </tr>
+        <tr>
+            <td width="60">颜色</td>
+            <td width="170">V1</td>
+            <td width="60">匹号</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td width="60">缸号</td>
+            <td>CA683571</td>
+            <td colspan="2" rowspan="5">
+                <div id="qrcode"></div>
+            </td>
+        </tr>
+        <tr>
+            <td width="60" class="small">幅宽-cm</td>
+            <td>实用136 CM</td>
+        </tr>
+        <tr>
+            <td width="60" class="small">克重-g/m2</td>
+            <td>210 G</td>
+        </tr>
+        <tr>
+            <td width="60" class="small">数量/KG</td>
+            <td class="large">26.6</td>
+        </tr>
+        <tr>
+            <td width="60">码数/Y</td>
+            <td class="large">101.8</td>
+        </tr>
+        <tr>
+            <td width="60">备注</td>
+            <td colspan="3">HQ21-80603201-HQ21041201/2Q3DZ628/952128132</td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <div class="qrcode-wrapper">
+                    <div class="qrcode-label">染厂二维码：</div>
+                    <div id="zy_qrcode1"></div>
+                    <div id="zy_qrcode2"></div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+        `
+
+            document.getElementById('app').innerHTML = htmlText
+        }
+        createTable()
+        let qrcodeText = "实用136CM&210G&25.5&V1"
+        new QRCode(document.getElementById("qrcode"), {
+            text: qrcodeText,
+            width: 107,
+            height: 107,
+            correctLevel: QRCode.CorrectLevel.L
+        })
+        new QRCode(document.getElementById("zy_qrcode1"), {
+            text: qrcodeText,
+            width: 90,
+            height: 90,
+            correctLevel: QRCode.CorrectLevel.L
+        })
+    </script>
+</body>
+
+</html>

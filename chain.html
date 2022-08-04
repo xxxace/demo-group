@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/chain.js"></script>
+    <script src="./js/promise.js"></script>
+</head>
+
+<body>
+    <script>
+        new PromiseX((resolve, reject) => {
+            setTimeout(() => {
+                resolve('111')
+            }, 1000)
+        }).then().then().then((res) => {
+            console.log(res)
+        })
+        function Boss(info) {
+            return new Promise(resolve => {
+                if (info.type === 'boss') {
+                    setTimeout(() => {
+                        resolve('boss handle it.')
+                    }, 1000)
+                } else {
+                    setTimeout(() => {
+                        console.log('boss: manager handle this.')
+                        resolve('$next')
+                    }, 1000)
+                }
+            })
+
+        }
+
+        function Manager(info) {
+            if (info.type === 'manager') {
+                return 'manager handle it.'
+            } else {
+                console.log('manager: employee handle this.')
+                return '$next'
+            }
+        }
+
+
+        function Employee(info) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    if (info.type === 'employee') {
+                        console.log('employee: ok. i got this.')
+                        resolve('employee handle it.')
+                    } else {
+                        console.log('employee: not my job.')
+                        resolve('$end')
+                    }
+                }, 1000)
+            })
+        }
+
+        const boss = new Chain(Boss);
+        const manager = new Chain(Manager);
+        const employee = new Chain(Employee);
+
+        boss.setNextHandler(manager);
+        manager.setNextHandler(employee);
+
+        boss.run({
+            type: 'boss'
+        }).then(res => {
+            console.log('result:', res)
+        }).catch((err) => {
+            console.log('error:', err)
+        })
+
+        setTimeout(() => {
+            boss.run({
+                type: 'manager'
+            }).then(res => {
+                console.log('result:', res)
+            }).catch((err) => {
+                console.log('error:', err)
+            })
+        }, 1100)
+
+        setTimeout(() => {
+            boss.run({
+                type: 'employee'
+            }).then(res => {
+                console.log('result:', res)
+            }).catch((err) => {
+                console.log('error:', err)
+            })
+        }, 2200)
+
+        setTimeout(() => {
+            boss.run({
+                type: 'ace'
+            }).then(res => {
+                console.log('result:', res)
+            }).catch((err) => {
+                console.log('error:', err)
+            })
+        }, 3300)
+    </script>
+</body>
+
+</html>

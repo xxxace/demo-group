@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preload" href="./js/preload-script.js" as="script">
+    <link rel="prefetch" href="./js/prefetch-script.js" as="script">
+</head>
+
+<body>
+    <script>
+        const origin = window.location.origin;
+        function loadByLink(type, cb) {
+            let loadedCount = 0;
+            const links = document.head.querySelectorAll(`[rel=${type}]`);
+
+            if (links.length) {
+                for (let i = 0; i < links.length; i++) {
+                    const link = links[i];
+                    loadResource(link.href, link.as, () => {
+                        loadedCount += 1;
+                        if (loadedCount === links.length) cb();
+                    });
+                }
+            } else {
+                cb();
+            }
+        }
+
+        function loadResource(src, type, cb) {
+            const resource = document.createElement(type);
+            resource.charset = 'utf-8';
+            resource.src = src.replace(origin, '');
+            resource.addEventListener('load', cb);
+            document.head.appendChild(resource);
+        }
+
+        loadByLink('prefetch', () => {
+            console.log('prefetch all done!');
+        });
+        
+        loadByLink('preload', () => {
+            console.log('preload all done!');
+        });
+    </script>
+</body>
+
+</html>

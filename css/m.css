@@ -1,0 +1,45 @@
+@media screen and (max-width:1199px) and (min-width:769px) {
+    .content {
+        width: 100%;
+    }
+    .content .inner {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+@media screen and (max-width:768px) {
+    header {
+        flex-flow: column;
+        text-align: center;
+    }
+    .nav-bar {
+        position: relative;
+        z-index: 1;
+    }
+    .nav-bar .nav-bar-body {
+        margin: 0;
+    }
+    .nav-bar .nav-bar-item {
+        width: 8rem;
+        text-align: center;
+        margin-right: 1.5rem;
+    }
+    .nav-bar .nav-bar-item a {
+        font-size: 1.2rem;
+        color: white;
+        line-height: 5rem;
+    }
+    .content {
+        width: 100%;
+        margin: 0;
+    }
+    .content .inner {
+        flex-flow: row wrap;
+        width: 100%;
+        margin: 0;
+    }
+    .list-card {
+        width: 50%;
+    }
+}
