@@ -6,13 +6,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="./js/ace-clock.js"></script>
 </head>
 
 <body>
-    <canvas id="can" width="600" height="600"></canvas>
+    <button id="TheWorld">砸瓦鲁哆</button>
+    <button id="tick">tick</button>
+    <div id="can"></div>
+    <div id="can2"></div>
+    <!-- <canvas id="can" width="600" height="600"></canvas> -->
     <script>
-        const canvas = document.getElementById('can');
-        const ctx = canvas.getContext('2d');
+        `
+        1.每天都补充蛋白质,营养均衡搭配   [鸡胸肉,猪肉] [鸡蛋] [胡萝卜, 玉米 ] [黄瓜, 芹菜] [菜花, 紫甘蓝]
+        2.不要吃太咸
+        3.康复运动
+        4.散步冥想
+        5.10:30 - 11点必须睡觉
+        `
+        // const canvas = document.getElementById('can');
+        // const ctx = canvas.getContext('2d');
 
         function drewClock() {
             // 填充背景
@@ -24,7 +36,7 @@
             let roundWidth = canvas.width / 2;
             ctx.beginPath();
             ctx.fillStyle = '#000000';
-            ctx.arc(canvas.width / 2, canvas.height/2, roundWidth / 2, 0, 2 * Math.PI, false);
+            ctx.arc(canvas.width / 2, canvas.height / 2, roundWidth / 2, 0, 2 * Math.PI, false);
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.save();
@@ -110,20 +122,43 @@
             ctx.restore();
         }
 
-        setInterval(() => {
-            ctx.clearRect(0, 0, 600, 600);
-            drewClock()
-        }, 997);
+        // setInterval(() => {
+        //     ctx.clearRect(0, 0, 600, 600);
+        //     drewClock()
+        // }, 997);
 
-        // new AceClock({
-        //     root: '#clock',
-        //     width: 300,
-        //     backgroundColor: '#f8f8f8',
-        //     minutWise:{
-        //         height: 15,
+        const clock = new AceClock({
+            el: '#can',
+            width: 300,
+            backgroundColor: '#f8f8f8',
+            minutWise: {
+                height: 15
+            }
+        });
+        clock.mount();
 
-        //     }
-        // })
+        const clock2 = new AceClock({
+            el: '#can2',
+            width: 300,
+            backgroundColor: '#f8f8f8',
+            minutWise: {
+                height: 15
+            }
+        });
+        clock2.mount();
+
+
+        const theWorld = document.getElementById("TheWorld");
+        theWorld.addEventListener('click', () => {
+            clock.pause();
+            clock2.pause();
+        });
+        
+        const tick = document.getElementById("tick");
+        tick.addEventListener('click', () => {
+            clock.tick();
+            clock2.tick();
+        });
     </script>
 </body>
 
