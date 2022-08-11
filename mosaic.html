@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/utils.js"></script>
+</head>
+
+<body>
+    <canvas id="can" width="500" height="500"></canvas>
+    <script>
+        const can = document.getElementById('can');
+        const ctx = can.getContext('2d');
+
+        const img = new Image();
+        img.src = './images/default.jpg'
+
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0, can.width, img.height * can.width / img.width);
+
+            pixelated(ctx, can, 20);
+
+            const imageData = can.toDataURL("image/jpg");
+
+            const imageDownload = useLink({
+                src: imageData,
+                filename: 'a picture'
+            });
+
+            setTimeout(() => {
+                const isdownload = window.confirm('是否下载图片？');
+                isdownload && imageDownload();
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

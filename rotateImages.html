@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            position: relative;
+            margin: 300px auto;
+            width: 200px;
+            height: 100px;
+            transform-style: preserve-3d;
+            transform: rotateX(-15deg);
+            perspective: 1000px;
+        }
+
+        .container div {
+            position: absolute;
+            display: inline-block;
+            width: 200px;
+            height: 100px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            text-align: center;
+            line-height: 100px;
+            transition: all .4s ease-in-out;
+        }
+
+        .current {
+            font-size: 26px;
+            font-weight: bold;
+            color: rgb(12, 97, 255);
+            border-color: rgb(12, 97, 255) !important;
+            box-shadow: inset 0 0 32px rgba(12, 97, 255, 0.3);
+        }
+
+        #imagesBox {
+            position: relative;
+            margin: 300px auto;
+            width: 200px;
+            height: 100px;
+            transform-style: preserve-3d;
+            transition: all .4s ease-in-out;
+        }
+
+        #imagesBox div {
+            display: inline-block;
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            line-height: 200px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        #imagesBox div:nth-child(1) {
+            transform: translateZ(100px);
+        }
+
+        #imagesBox div:nth-child(2) {
+            transform: translateZ(-100px);
+        }
+
+        #imagesBox div:nth-child(3) {
+            transform: rotateY(90deg) translateZ(-100px);
+        }
+
+        #imagesBox div:nth-child(4) {
+            transform: rotateY(-90deg) translateZ(-100px);
+        }
+
+        #imagesBox div:nth-child(5) {
+            transform: rotateX(90deg) translateZ(-100px);
+        }
+
+        #imagesBox div:nth-child(6) {
+            transform: rotateX(-90deg) translateZ(-100px);
+        }
+
+        #flipBox {
+            /* border: 1px solid #000; */
+            border-right: none;
+            border-bottom: none;
+            box-sizing: border-box;
+        }
+
+        .flip-box-item {
+            position: relative;
+            display: inline-block;
+            /* border-right: 1px solid #000;
+            border-bottom: 1px solid #000; */
+            box-sizing: border-box;
+            vertical-align: bottom;
+            /* overflow: hidden; */
+            transform-style: preserve-3d;
+            transition: all .4s ease-in-out;
+            transform: rotateY(360deg);
+        }
+
+        .flip-box-item div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .flip-box-item div:nth-child(1) {
+            transform: rotateY(0deg);
+        }
+
+        .flip-box-item div:nth-child(2) {
+            transform: rotateY(0deg);
+        }
+
+        .test {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            transform-style: preserve-3d;
+            /* transform: rotateY(180deg); */
+        }
+
+        .test div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+
+        .test div:nth-child(1) {
+            transform: rotateY(0deg);
+            background-color: rgb(83, 67, 67);
+        }
+
+        .test div:nth-child(2) {
+            transform: rotateY(0deg);
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test">
+        <div>1</div>
+        <div>2</div>
+    </div>
+    <div class="container">
+        <div class="current">1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+    </div>
+
+    <div id="imagesBox">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+    </div>
+
+    <div id="flipBox">
+
+    </div>
+    <script>
+        const test = document.querySelector('.test');
+        let degtest = 180;
+        setInterval(() => {
+            degtest += 180;
+            test.children[0].style.transform = `rotateY(${degtest}deg)`
+            // test.children[1].style.transform = `rotateY(${degtest}deg)`
+        }, 1000)
+
+
+        const flipBox = document.querySelector('#flipBox');
+        const imagesBox = document.querySelector('#imagesBox');
+        const container = document.querySelector('.container');
+        for (let i = 0; i < container.children.length; i++) {
+            const item = container.children[i];
+            item.style.transform = `rotateY(${i * 40}deg) translateZ(300px)`;
+        }
+
+        let y = 0;
+        let step = 40;
+        function rotate() {
+            step -= 40;
+            for (let i = 0; i < container.children.length; i++) {
+                const item = container.children[i];
+                let transform = `rotateY(${i * 40 + step}deg) translateZ(300px)`;
+
+                item.classList.remove('current');
+
+                if ((i * 40 + step) % 360 === 0) {
+                    item.classList.add('current');
+                    transform += `scale(1.1)`;
+                }
+
+                item.style.transform = transform;
+            }
+        }
+
+        rotate();
+        setInterval(function () {
+            rotate();
+        }, 1000);
+
+        setInterval(function () {
+            y += 1;
+            if (y > 500) y = 0;
+            imagesBox.style.transform = `rotateX(${y}deg) rotateY(${y}deg)`
+        }, 60);
+
+        const rows = 3
+        const cols = 10
+        const cardWidth = 80;
+        const borderWidth = 1;
+        function initFlipBox() {
+            flipBox.style.width = cardWidth * cols + borderWidth + 'px';
+
+            const fregment = document.createDocumentFragment();
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const card = document.createElement('div');
+                    const cardItem1 = document.createElement('div');
+                    const cardItem2 = document.createElement('div');
+                    card.classList.add('flip-box-item');
+                    card.style.width = cardWidth + 'px';
+                    card.style.height = cardWidth + 'px';
+                    cardItem1.innerText = `前 ${j + 1}`
+                    cardItem2.innerText = `后 ${j + 1}`
+                    card.append(cardItem1);
+                    card.append(cardItem2);
+                    fregment.append(card);
+                }
+            }
+            flipBox.append(fregment);
+        }
+
+        initFlipBox();
+    </script>
+</body>
+
+</html>
+<!-- 
+0
+
+-360
+
+-720
+
+-1080
+
+-1440 -->

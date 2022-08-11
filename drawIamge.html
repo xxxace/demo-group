@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/utils.js"></script>
+</head>
+
+<body>
+    <canvas id="can" width="500" height="500"></canvas>
+    <script>
+        const can = document.getElementById('can');
+        const ctx = can.getContext('2d');
+
+        const img = new Image();
+        img.src = './images/bg.jpg'
+
+        img.onload = () => {
+            ctx.drawImage(img, 0, 0, can.width, img.height * can.width / img.width);
+
+            ctx.fillStyle = '#b8b8b8';
+            ctx.fillRect(0, 0, can.width, can.height);
+            ctx.globalCompositeOperation = 'destination-out';
+
+            changePixel();
+        }
+
+        let isDown = false;
+        can.addEventListener('mousedown', function (e) {
+            isDown = true;
+            ctx.beginPath();
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        can.addEventListener('mousemove', function (e) {
+            if (isDown) {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+            }
+        });
+
+        can.addEventListener('mouseup', function (e) {
+            isDown = false;
+        });
+
+        function changePixel() {
+            const pixelData = ctx.getImageData(0, 0, can.width, can.height);
+            console.log(getPixel(pixelData, 100, 100));
+            setPixel(pixelData, 100, 100, [0, 0, 0, 255]);
+            console.log(getPixel(pixelData, 100, 100));
+            ctx.putImageData(pixelData, 0, 0);
+        }
+    </script>
+</body>
+
+</html>
