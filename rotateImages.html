@@ -9,7 +9,7 @@
     <style>
         .container {
             position: relative;
-            margin: 300px auto;
+            margin: 100px auto;
             width: 200px;
             height: 100px;
             transform-style: preserve-3d;
@@ -82,7 +82,7 @@
         }
 
         #flipBox {
-            /* border: 1px solid #000; */
+            /* border: 1px solid rgb(187, 187, 187); */
             border-right: none;
             border-bottom: none;
             box-sizing: border-box;
@@ -91,64 +91,78 @@
         .flip-box-item {
             position: relative;
             display: inline-block;
-            /* border-right: 1px solid #000;
-            border-bottom: 1px solid #000; */
+            /* border-right: 1px solid #bebebe;
+            border-bottom: 1px solid #bebebe; */
             box-sizing: border-box;
             vertical-align: bottom;
+            background-color: #e9e9e9;
+        }
+
+        .flip-box-item-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
             /* overflow: hidden; */
             transform-style: preserve-3d;
-            transition: all .4s ease-in-out;
-            transform: rotateY(360deg);
+            transition: transform .5s;
+            transform: rotateY(0deg);
         }
 
-        .flip-box-item div {
+        .flip-box-item-body div {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            line-height: 80px;
+            border: 1px solid #bebebe;
             background-color: #fff;
+            text-align: center;
         }
 
-        .flip-box-item div:nth-child(1) {
-            transform: rotateY(0deg);
+        .flip-box-item-body div:nth-child(1) {
+            transform: translateZ(1px) !important;
         }
 
-        .flip-box-item div:nth-child(2) {
-            transform: rotateY(0deg);
+        .flip-box-item-body div:nth-child(2) {
+            transform: rotateY(180deg) translateZ(0px) !important;
         }
 
-        .test {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            border: 1px solid #000;
-            transform-style: preserve-3d;
-            /* transform: rotateY(180deg); */
+        .loading {
+            display: flex;
         }
 
-        .test div {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: #fff;
+        .loading div {
+            font-size: 34px;
+            animation: bouncing 0.5s infinite alternate;
         }
 
+        @keyframes bouncing {
+            0% {
+                transform: translateY(0);
+            }
 
-        .test div:nth-child(1) {
-            transform: rotateY(0deg);
-            background-color: rgb(83, 67, 67);
-        }
-
-        .test div:nth-child(2) {
-            transform: rotateY(0deg);
-            background-color: #333;
+            100% {
+                transform: translateY(26px);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="test">
-        <div>1</div>
-        <div>2</div>
+    <div class="loading">
+        <div>L</div>
+        <div>o</div>
+        <div>a</div>
+        <div>d</div>
+        <div>i</div>
+        <div>n</div>
+        <div>g</div>
+        <div>.</div>
+        <div>.</div>
+        <div>.</div>
+
     </div>
     <div class="container">
         <div class="current">1</div>
@@ -175,13 +189,12 @@
 
     </div>
     <script>
-        const test = document.querySelector('.test');
-        let degtest = 180;
-        setInterval(() => {
-            degtest += 180;
-            test.children[0].style.transform = `rotateY(${degtest}deg)`
-            // test.children[1].style.transform = `rotateY(${degtest}deg)`
-        }, 1000)
+        const loading = document.querySelector('.loading');
+
+        for (let i = 0; i < loading.children.length; i++) {
+            const char = loading.children[i];
+            char.style.animationDelay = `${i * 40}ms`;
+        }
 
 
         const flipBox = document.querySelector('#flipBox');
@@ -225,7 +238,7 @@
         const rows = 3
         const cols = 10
         const cardWidth = 80;
-        const borderWidth = 1;
+        const borderWidth = 4;
         function initFlipBox() {
             flipBox.style.width = cardWidth * cols + borderWidth + 'px';
 
@@ -233,15 +246,19 @@
             for (let i = 0; i < rows; i++) {
                 for (let j = 0; j < cols; j++) {
                     const card = document.createElement('div');
+                    const cardBody = document.createElement('div');
                     const cardItem1 = document.createElement('div');
                     const cardItem2 = document.createElement('div');
                     card.classList.add('flip-box-item');
                     card.style.width = cardWidth + 'px';
                     card.style.height = cardWidth + 'px';
+
+                    cardBody.classList.add('flip-box-item-body');
                     cardItem1.innerText = `前 ${j + 1}`
                     cardItem2.innerText = `后 ${j + 1}`
-                    card.append(cardItem1);
-                    card.append(cardItem2);
+                    cardBody.append(cardItem1);
+                    cardBody.append(cardItem2);
+                    card.append(cardBody);
                     fregment.append(card);
                 }
             }
@@ -249,6 +266,25 @@
         }
 
         initFlipBox();
+
+        const flipboxitembody = document.querySelectorAll('.flip-box-item-body');
+        let flipdeg = 0;
+        function flip() {
+            flipdeg += 180;
+            for (let i = 0; i < flipboxitembody.length; i++) {
+                const item = flipboxitembody[i];
+                const row = Math.floor(i / 10);
+                const col = i % 10;
+
+                item.style.transform = `rotateY(${flipdeg}deg)`;
+                item.style.transition = `transform 0.5s ${(row + col) * 100}ms`;
+            }
+        }
+
+        flip()
+        setInterval(() => {
+            flip()
+        }, 3000);
     </script>
 </body>
 
