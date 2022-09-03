@@ -13,6 +13,11 @@
         .hidden {
             display: none;
         }
+
+        .my-ul {
+            padding-left: 20px;
+            font-size: 16px;
+        }
     </style>
 </head>
 
@@ -33,7 +38,7 @@
     <div class="banner">
         <img src="./images/bg.jpg" alt="" class="backgroud">
         <div class="user">
-            <img src="./images/default.JPG" alt="阿测" class="user-avatar">
+            <img src="./images/default.jpg" alt="阿测" class="user-avatar">
             <div class="user-name"><span>阿测</span></div>
         </div>
     </div>
@@ -54,11 +59,47 @@
         </section>
     </div>
     <script>
+        const baseUrl = 'https://xxxace.github.io/demo-group'
+        const list = [
+            'chain',
+            'clock',
+            'colorfulBall',
+            'drawImage',
+            'ie11',
+            'lazyLoadImage',
+            'mosaic',
+            'movingBalls',
+            'preload',
+            'rotateImages',
+            'rotatingBoard',
+            'roundMenu',
+            'scratchTicket',
+            'waterMark',
+            'theMatrix'
+        ];
+
+        function renderList(list) {
+            const ul = document.createElement('ul');
+            ul.classList.add('my-ul');
+
+            for (let i = 0; i < list.length; i++) {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `${baseUrl}/${list[i]}.html`;
+                a.innerText = list[i];
+                li.append(a);
+                ul.append(li);
+            }
+
+            document.body.append(ul);
+        }
+
+        renderList(list);
         function debounce(fn, delay, triggrNow) {
             let t = null,
                 res = ''
 
-            return function() {
+            return function () {
                 let _self = this,
                     args = arguments
 
@@ -79,7 +120,7 @@
             let t = null,
                 begin = new Date().getTime()
 
-            return function() {
+            return function () {
                 let _self = this,
                     args = arguments,
                     res = '',
@@ -97,7 +138,7 @@
             }
         }
 
-        inner.addEventListener('click', throttle(function(e) {
+        inner.addEventListener('click', throttle(function (e) {
             this.style.cssText = `width:${Math.ceil(Math.random() * 400)}px; height:${Math.ceil(Math.random() * 400)}px`
         }, 1000))
 
@@ -117,6 +158,7 @@
             }]
         })
         console.log(`{"id":0,"billNo":"","billStatus":"B","sourceType":"C","entry":[{"id":0,"articleNo":"","materialName":"","densityC":"","densityW":"","ypGramWeight":"","ypDensityC":"","ypDensityW":"","ypYarnLong":"","ypGrayClothLong":"","ypCookBefore":"","zbGramWeight":"","zbDensityC":"","zbDensityW":"","zbYarnLong":"","zbLong":"","zbCookAfter":"","ypGsm":0,"zbGsm":0,"ypTotalNeedle":0,"zbTotalNeedle":0,"avgTotalNeedle":0,"ypCoilWeight":0,"zbCoilWeight":0,"avgCoilWeight":0,"comment":"","remark":""}]}` === `{"id":0,"billNo":"","billStatus":"B","sourceType":"C","entry":[{"id":0,"articleNo":"","materialName":"","densityC":"","densityW":"","ypGramWeight":"","ypDensityC":"","ypDensityW":"","ypYarnLong":"","ypGrayClothLong":"","ypCookBefore":"","zbGramWeight":"","zbDensityC":"","zbDensityW":"","zbYarnLong":"","zbLong":"","zbCookAfter":"","ypGsm":0,"zbGsm":0,"ypTotalNeedle":0,"zbTotalNeedle":0,"avgTotalNeedle":0,"ypCoilWeight":0,"zbCoilWeight":0,"avgCoilWeight":0,"comment":"","remark":""}]}`);
+
     </script>
 </body>
 

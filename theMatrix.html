@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="code-rain"></canvas>
+    <script>
+        const canvas = document.getElementById('code-rain');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Random {
+            constructor() {
+                const number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+                const lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+                const upercase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+                const specialChar = ['{', '}', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '[', ']', "'", '"', '<', '>', '?', '|', "\\", "/", ',', '.', '`'];
+                this.charList = [...number, ...lowercase, ...upercase, ...specialChar];
+            }
+
+            getRandomChar() {
+                const index = Math.floor(Math.random() * this.charList.length);
+                return this.charList[index];
+            }
+
+            getRandomColor() {
+                let color = Math.floor(Math.random() * 0xFFFFFF);
+
+                if (color.length < 7) {
+                    color = this.getRandomColor();
+                }
+
+                return `#${color}`;
+            }
+
+            add(charset) {
+                this.charList.push(charset);
+            }
+        }
+
+        class CodeRain extends Random {
+            constructor(options) {
+                if (options && typeof options !== "object") {
+                    throw TypeError('argument options expected type object.')
+                }
+
+                super();
+
+                this.options = Object.assign({
+                    fontSize: 20,
+                    rows: 2,
+                    rowDistance: 35
+                }, options);
+
+                Object.assign(this, this.options);
+
+                this.fps = 60;
+                this.frameTimer = 0;
+                this.frameInterval = 1000 / this.fps;
+                this.cols = 0;
+                this.rowList = [];
+
+                this.updateColumns();
+            }
+
+            updateColumns() {
+                const { canvas, fontSize, rows, rowDistance } = this;
+                this.rowList = [];
+                this.cols = Math.floor(canvas.width / fontSize);
+                const totalRow = Math.floor(canvas.height / fontSize);
+
+                for (let i = 0; i < rows; i++) {
+                    this.rowList[i] = [];
+                    for (let j = 0; j < this.cols; j++) {
+                        this.rowList[i].push(Math.floor(Math.random() * totalRow) + (i * -rowDistance));
+                    }
+                }
+            }
+
+            render(timestamp) {
+                if (this.frameTimer > this.frameInterval) {
+                    const { canvas, ctx, cols, color, fontSize, backgroundColor, text, rowList } = this;
+                    ctx.beginPath();
+                    ctx.fillStyle = backgroundColor || `rgba(255,255,255,0.1)`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.font = `${fontSize}px`;
+                    for (let r = 0; r < rowList.length; r++) {
+                        const row = rowList[r];
+                        for (let i = 0; i < cols; i++) {
+                            ctx.strokeStyle = color || this.getRandomColor();
+                            const t = text ? text[row[i] % text.length] : this.getRandomChar();
+                            ctx.strokeText(t, i * fontSize, row[i] * fontSize);
+
+                            row[i]++;
+
+                            if (row[i] * fontSize > canvas.height && Math.random() * 4 - 2 > 1) {
+                                row[i] = 0;
+                            }
+                        }
+                    }
+
+                    ctx.closePath();
+                    this.frameTimer = 0;
+                } else {
+                    this.frameTimer += timestamp;
+                }
+            }
+        }
+
+        const codeRain = new CodeRain({
+            ctx: ctx,
+            canvas: canvas,
+            color: 'chartreuse',
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            rows: 1,
+            fps: 60,
+            // text: 'hello world!'
+        });
+
+        let count = 0;
+        let lastTime = 0;
+        const colors = ['chartreuse', '#a037ff', '#ff417e', '#ff417e', '#ff2e4b', '#ff2e4b', '#ff701d', '#bdff1d', '#1dff77', '#1dffe0']
+        function animate(timestamp) {
+            const interval = timestamp - lastTime;
+            lastTime = timestamp;
+            codeRain.render(interval);
+            count += interval;
+            if (count > canvas.height) {
+                codeRain.color = colors[Math.floor(Math.random() * colors.length)];
+                count = 0;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        animate(0);
+
+        window.addEventListener('resize', function (e) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            codeRain.updateColumns();
+        });
+    </script>
+</body>
+
+</html>
