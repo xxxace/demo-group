@@ -62,13 +62,14 @@
             }
 
             getRandomColor() {
-                let color = Math.floor(Math.random() * 0xFFFFFF);
+                // let color = Math.floor(Math.random() * 0xFFFFFF);
 
-                if (color.length < 7) {
-                    color = this.getRandomColor();
-                }
+                // if (color.length < 7) {
+                //     color = this.getRandomColor();
+                // }
 
-                return `#${color}`;
+                // return `#${color}`;
+                return `#${Math.random().toString(16).slice(-6)}`
             }
 
             add(charset) {
