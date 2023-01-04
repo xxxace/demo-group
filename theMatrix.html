@@ -128,8 +128,9 @@
                     for (let r = 0; r < rowList.length; r++) {
                         const row = rowList[r];
                         for (let i = 0; i < cols; i++) {
-                            ctx.strokeStyle = color || this.getRandomColor();
                             const t = text ? text[row[i] % text.length] : this.getRandomChar();
+                            
+                            ctx.strokeStyle = color || this.getRandomColor();
                             ctx.strokeText(t, i * fontSize, row[i] * fontSize);
 
                             row[i]++;
