@@ -201,7 +201,7 @@
                 this.backNode.dataset.number = time;
             };
             Flipper.prototype.flipDown = function (currentTime, nextTime) {
-                if (this.isFlipping || this.nextTime === nextTime) {
+                if (this.isFlipping) {
                     return false;
                 }
                 this.isFlipping = true;
@@ -212,31 +212,35 @@
             return Flipper;
         }());
 
-        var getTimeFromDate = function (date) {
-            return date
-                .toTimeString()
-                .slice(0, 8)
-                .split(":")
-                .join("");
-        };
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var getTimeFromDate = function (date) {
+                    return date
+                        .toTimeString()
+                        .slice(0, 8)
+                        .split(":")
+                        .join("");
+                };
 
-        var flips = document.querySelectorAll(".flip");
-        var now = new Date();
-        var nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
-        var nextTimeStr = getTimeFromDate(now);
-        var flippers = Array.from(flips).map(function (flip, i) { return new Flipper(flip, nowTimeStr[i], nextTimeStr[i]); });
+                var flips = document.querySelectorAll(".flip");
+                var now = new Date();
+                var nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
+                var nextTimeStr = getTimeFromDate(now);
+                var flippers = Array.from(flips).map(function (flip, i) { return new Flipper(flip, nowTimeStr[i], nextTimeStr[i]); });
 
-        setInterval(function () {
-            var now = new Date();
-            var nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
-            var nextTimeStr = getTimeFromDate(now);
-            for (var i = 0; i < flippers.length; i++) {
-                if (nowTimeStr[i] === nextTimeStr[i]) {
-                    continue;
-                }
-                flippers[i].flipDown(nowTimeStr[i], nextTimeStr[i]);
-            }
-        }, 1000)
+                setInterval(function () {
+                    var now = new Date();
+                    var nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
+                    var nextTimeStr = getTimeFromDate(now);
+                    for (var i = 0; i < flippers.length; i++) {
+                        if (nowTimeStr[i] === nextTimeStr[i]) {
+                            continue;
+                        }
+                        flippers[i].flipDown(nowTimeStr[i], nextTimeStr[i]);
+                    }
+                }, 1000)
+            }, 1000)
+        })
     </script>
 </body>
 
