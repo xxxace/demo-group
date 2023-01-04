@@ -75,7 +75,7 @@ function useLink(options) {
 
   if (defaultOptions.autoDownload) {
     download();
-  } else {
-    return download;
   }
+  
+  return download;
 }
