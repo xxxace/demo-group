@@ -82,7 +82,7 @@
     let c2 = Object.create(parent)
     c2.name = 'c2'
     c1.list.push(4)
-    console.log(c1.list, c2.list) // [1,2,3,4] [1,2,3]
+    console.log(c1.list, c2.list) // [1,2,3,4] [1,2,3,4]
     console.log(c1.getName(), c2.getName())
 })();
 

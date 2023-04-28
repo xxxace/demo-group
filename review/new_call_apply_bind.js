@@ -124,3 +124,46 @@ function flatten2(array) {
 
 console.log(flatten([1, 2, 3, [4, [5, [6, [7, [8]]]]]]))
 console.log(flatten2([1, 2, 3, [4, [5, [6, [7, [8]]]]]]))
+
+function $push() {
+    let O = Object(arguments[0])
+    const args = Array.prototype.splice.call(arguments, 1)
+    let len = O.length >>> 0
+    let argCount = args.length >>> 0
+
+    if (len + argCount > 2 ** 53 - 1) {
+        throw Error('超过数组最大长度')
+    }
+
+    for (let i = 0; i < argCount; i++) {
+        O[len + i] = args[i]
+    }
+
+    let newLength = len + argCount
+    O.length = newLength
+    return newLength
+}
+const array = [1, 2, 3]
+console.log($push(array, 4, 5, 6), array.length)
+
+const stack = [1, 2, 3, 4, 5]
+function work() {
+    const item = stack.shift()
+    if (item) {
+        console.log('item:' + item)
+        nexttick()
+    } else {
+        console.log('work done')
+    }
+    console.log('outter')
+}
+
+function nexttick() {
+    if (stack.length) {
+        process.nextTick(work)
+    } else {
+        console.log('nexttick done')
+    }
+}
+
+work()
