@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.2">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.6">
   <diagram name="第 1 页" id="sg9jkk9uXfDzYlD8g0kY">
     <mxGraphModel dx="1426" dy="751" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -37,8 +37,8 @@
         <mxCell id="iDcGc7ECiD4eZ3-SKhtU-17" parent="1" style="whiteSpace=wrap;html=1;" value="对应页面" vertex="1">
           <mxGeometry height="60" width="120" x="500" y="430" as="geometry" />
         </mxCell>
-        <mxCell id="iDcGc7ECiD4eZ3-SKhtU-19" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;align=left;" value="SQL的定义：&lt;br&gt;&lt;br&gt;函数名称：必须是英文名&lt;br&gt;函数描述：中文描述&lt;br&gt;函数参数：过滤条件的测试&lt;br&gt;函数类型：有参数限制 || 无参数限制&lt;br&gt;函数体：&lt;br&gt;SELECT * FROM XXX WHERE USERNO =&amp;nbsp;@userno&lt;br&gt;有参数限制即需定义占位符如@userno&lt;br&gt;参数还得为其定义类型这样子在替换时才决定是否要加文本符号还是纯数字，又或者是日期&lt;br&gt;&lt;br&gt;无参数显示即不提前限定条件，由使用者自行传递where条件&lt;br&gt;作为筛选条件（只允许数据量不大或者不重要的表）&lt;br&gt;&lt;br&gt;和objectid绑定，前端不再直接查询是否拥有哪些语句，而是传递相应的ENAME或者scope 也就是模块唯一名称 + 函数名&lt;br&gt;组成定位符&lt;br&gt;&lt;br&gt;服务端要进行校验用户是否有权限，没权限则报错&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;有权限则开始解析根据函数类型进行解析，&lt;/div&gt;&lt;div&gt;1.类型的解析，对不上则报错&lt;/div&gt;&lt;div&gt;2.占位符的替换&lt;/div&gt;&lt;div&gt;3.拦截器：对处理后的语句进行加工&lt;/div&gt;&lt;div&gt;4.执行&lt;/div&gt;" vertex="1">
-          <mxGeometry height="400" width="400" x="170" y="570" as="geometry" />
+        <mxCell id="iDcGc7ECiD4eZ3-SKhtU-19" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;align=left;" value="SQL的定义：&lt;br&gt;&lt;br&gt;函数名称：必须是英文名&lt;br&gt;函数描述：中文描述&lt;br&gt;函数参数：过滤条件的测试&lt;br&gt;函数类型：有参数限制 || 无参数限制&lt;br&gt;函数体：&lt;br&gt;SELECT * FROM XXX WHERE USERNO =&amp;nbsp;@userno&lt;br&gt;有参数限制即需定义占位符如@userno&lt;br&gt;参数还得为其定义类型这样子在替换时才决定是否要加文本符号还是纯数字，又或者是日期&lt;br&gt;&lt;br&gt;无参数显示即不提前限定条件，由使用者自行传递where条件&lt;br&gt;作为筛选条件（只允许数据量不大或者不重要的表）&lt;br&gt;&lt;br&gt;和objectid绑定，前端不再直接查询是否拥有哪些语句，而是传递相应的ENAME或者scope 也就是模块唯一名称 + 函数名&lt;br&gt;组成定位符&lt;br&gt;&lt;br&gt;服务端要进行校验用户是否有权限，没权限则报错&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;有权限则开始解析根据函数类型进行解析，&lt;/div&gt;&lt;div&gt;1.类型的解析，对不上则报错&lt;/div&gt;&lt;div&gt;2.占位符的替换&lt;/div&gt;&lt;div&gt;3.拦截器：对处理后的语句进行加工&lt;/div&gt;&lt;div&gt;4.执行&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;后续：&lt;/div&gt;&lt;div&gt;实现函数解析引擎，实现多函数组合处理&lt;/div&gt;&lt;div&gt;权限拦截统一处理实现字段、行、数据权限&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;提供一个平台：用户可自行增删改查语句、调试&lt;/div&gt;" vertex="1">
+          <mxGeometry height="540" width="540" x="170" y="570" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
